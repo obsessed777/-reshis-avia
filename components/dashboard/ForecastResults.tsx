@@ -28,17 +28,17 @@ export function ChartPlaceholder({ t }: { t: ShellCopy }) {
 
 export default function ForecastResults({ result, locale, t }: { result: Forecast | null; locale: Locale; t: ShellCopy }) {
   const cards = [
-    { label: t.seats, value: result?.seats, icon: 'seat' },
-    { label: t.demand, value: result?.demand, icon: 'chart' },
-    { label: t.sales, value: result?.sales, icon: 'stack' },
-    { label: t.free, value: result?.freeSeats, icon: 'seat' },
+    { id: 'seats', label: t.seats, value: result?.seats, icon: 'seat' },
+    { id: 'demand', label: t.demand, value: result?.demand, icon: 'chart' },
+    { id: 'sales', label: t.sales, value: result?.sales, icon: 'stack' },
+    { id: 'free', label: t.free, value: result?.freeSeats, icon: 'seat' },
   ] as const;
   return (
     <section className='results' aria-labelledby='results-heading'>
       <div className='section-heading'><h2 id='results-heading'>{t.results}</h2><span>{result ? `${calculatorCopy[locale].resultFor}: ${result.route} · ${result.date} · ${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(result.price)} ₽` : t.after}</span></div>
       <div className='metrics'>
         {cards.map(card => (
-          <article className='metric' key={card.label}>
+          <article className='metric' key={card.id}>
             <span className='metric-icon'><Icon name={card.icon} /></span>
             <div>
               <h3>{card.label}</h3>
