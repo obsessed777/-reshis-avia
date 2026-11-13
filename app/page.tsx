@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -10,12 +10,43 @@ import Footer from '@/components/dashboard/Footer';
 import Header from '@/components/dashboard/Header';
 import { copy, type Locale } from '@/lib/i18n/shell';
 import { forecastInfoCopy } from '@/lib/i18n/forecast-info';
+import type { Forecast, ForecastRequest } from '@/lib/contracts/forecast';
 
 export default function Home() {
   const [locale, setLocale] = useState<Locale>('ru');
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const activeRequest = useRef<AbortController | null>(null);
+  const [result, setResult] = useState<Forecast | null>(null);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const t = copy[locale];
   useEffect(() => { document.documentElement.lang = locale; }, [locale]);
+  useEffect(() => () => activeRequest.current?.abort(), []);
+
+  function editForecast() {
+    activeRequest.current?.abort();
+    activeRequest.current = null;
+    setPending(false);
+    setError(null);
+  }
+  async function submitForecast(request: ForecastRequest) {
+    activeRequest.current?.abort();
+    const controller = new AbortController();
+    activeRequest.current = controller;
+    setPending(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/forecast', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request), signal: controller.signal });
+      const payload = await response.json();
+      if (controller.signal.aborted) return;
+      if (!response.ok) { setError(payload?.error?.code ?? 'DATA_UNAVAILABLE'); return; }
+      setResult(payload as Forecast);
+    } catch {
+      if (!controller.signal.aborted) setError('DATA_UNAVAILABLE');
+    } finally {
+      if (activeRequest.current === controller) { activeRequest.current = null; setPending(false); }
+    }
+  }
 
   return (
     <>
@@ -33,8 +64,8 @@ export default function Home() {
           </div>
         </section>
         <div className='content-wrap' id='forecast'>
-          <ForecastForm t={t} />
-          <ForecastResults result={null} locale={locale} t={t} />
+          <ForecastForm t={t} locale={locale} pending={pending} error={error} onSubmit={submitForecast} onEdit={editForecast} />
+          <ForecastResults result={result} locale={locale} t={t} />
           <ForecastInfo t={forecastInfoCopy[locale]} />
         </div>
       </main>

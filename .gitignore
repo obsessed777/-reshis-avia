@@ -2,6 +2,9 @@ node_modules/
 .pnp
 .pnp.js
 .next/
+.open-next/
+.wrangler/
+.dev.vars*
 out/
 build/
 .env*

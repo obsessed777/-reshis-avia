@@ -1,0 +1,4 @@
+export const calculatorCopy = {
+  ru: { loading: 'Рассчитываем прогноз…', loadingRoutes: 'Загружаем маршруты…', unavailable: 'Не удалось загрузить данные. Попробуйте ещё раз.', invalid: 'Проверьте маршрут, дату и цену. Цена должна быть больше нуля и содержать не более двух знаков после запятой.', notFound: 'Для этого маршрута и даты прогноз не найден.', tooLarge: 'Запрос слишком большой.', recommendation: 'Рекомендуемый диапазон', resultFor: 'Расчёт' },
+  en: { loading: 'Calculating forecast…', loadingRoutes: 'Loading routes…', unavailable: 'Could not load the data. Please try again.', invalid: 'Check the route, date and price. Price must be positive with at most two decimal places.', notFound: 'No forecast was found for this route and date.', tooLarge: 'The request is too large.', recommendation: 'Recommended range', resultFor: 'Forecast' },
+} as const;

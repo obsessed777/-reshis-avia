@@ -1,13 +1,7 @@
 import type { Locale, ShellCopy } from '@/lib/i18n/shell';
+import type { Forecast } from '@/lib/contracts/forecast';
+import { calculatorCopy } from '@/lib/i18n/calculator';
 import Icon from './Icon';
-
-export type Forecast = {
-  seats: number;
-  demand: number;
-  sales: number;
-  freeSeats: number;
-  quantiles: { quantile: number; demand: number }[];
-};
 
 export function ChartPlaceholder({ t }: { t: ShellCopy }) {
   return (
@@ -39,7 +33,7 @@ export default function ForecastResults({ result, locale, t }: { result: Forecas
   ] as const;
   return (
     <section className='results' aria-labelledby='results-heading'>
-      <div className='section-heading'><h2 id='results-heading'>{t.results}</h2><span>{t.after}</span></div>
+      <div className='section-heading'><h2 id='results-heading'>{t.results}</h2><span>{result ? `${calculatorCopy[locale].resultFor}: ${result.route} · ${result.date} · ${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(result.price)} ₽` : t.after}</span></div>
       <div className='metrics'>
         {cards.map(card => (
           <article className='metric' key={card.label}>
