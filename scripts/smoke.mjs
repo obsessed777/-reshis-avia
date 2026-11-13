@@ -71,6 +71,11 @@ try {
   assert.match(me.headers.get('cache-control') ?? '', /no-store/);
   const forbidden = await fetch(`${url}/api/auth/logout`, { method: 'POST', headers: { origin: 'https://foreign.example' } });
   assert.equal(forbidden.status, 403);
+  const history = await fetch(`${url}/api/history`);
+  assert.ok([401, 503].includes(history.status), 'Anonymous history must be denied');
+  assert.match(history.headers.get('cache-control') ?? '', /no-store/);
+  const foreignHistory = await fetch(`${url}/api/history`, { method: 'POST', headers: { origin: 'https://foreign.example', 'content-type': 'application/json' }, body: JSON.stringify(request) });
+  assert.equal(foreignHistory.status, 403);
   console.log("Smoke test passed: homepage, health, route coverage, forecast and error paths, anonymous auth and disabled lead");
 } finally {
   server.kill();

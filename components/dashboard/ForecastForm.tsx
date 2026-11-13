@@ -4,10 +4,10 @@ import { calculatorCopy } from '@/lib/i18n/calculator';
 import type { Locale, ShellCopy } from '@/lib/i18n/shell';
 import Icon from './Icon';
 
-export default function ForecastForm({ t, locale, pending, error, onSubmit, onEdit }: { t: ShellCopy; locale: Locale; pending: boolean; error: string | null; onSubmit: (request: ForecastRequest) => void; onEdit: () => void }) {
-  const [destination, setDestination] = useState('AER');
-  const [date, setDate] = useState('2026-06-01');
-  const [price, setPrice] = useState('');
+export default function ForecastForm({ t, locale, pending, error, onSubmit, onEdit, initial }: { t: ShellCopy; locale: Locale; pending: boolean; error: string | null; onSubmit: (request: ForecastRequest) => void; onEdit: () => void; initial?: ForecastRequest }) {
+  const [destination, setDestination] = useState(initial?.destination ?? 'AER');
+  const [date, setDate] = useState(initial?.date ?? '2026-06-01');
+  const [price, setPrice] = useState(initial ? String(initial.price) : '');
   const [routes, setRoutes] = useState<RoutesResponse | null>(null);
   const [routesFailed, setRoutesFailed] = useState(false);
   const c = calculatorCopy[locale];

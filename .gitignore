@@ -27,3 +27,4 @@ design-mockups/
 handoff-to-codex.md
 graphify-out/
 *.tsbuildinfo
+supabase/.temp/
