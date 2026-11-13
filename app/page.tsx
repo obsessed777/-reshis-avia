@@ -5,8 +5,11 @@ import { useEffect, useRef, useState } from 'react';
 import AuthDialog from '@/components/dashboard/AuthDialog';
 import ForecastForm from '@/components/dashboard/ForecastForm';
 import ForecastResults from '@/components/dashboard/ForecastResults';
+import ForecastInfo from '@/components/dashboard/ForecastInfo';
+import Footer from '@/components/dashboard/Footer';
 import Header from '@/components/dashboard/Header';
 import { copy, type Locale } from '@/lib/i18n/shell';
+import { forecastInfoCopy } from '@/lib/i18n/forecast-info';
 
 export default function Home() {
   const [locale, setLocale] = useState<Locale>('ru');
@@ -32,8 +35,10 @@ export default function Home() {
         <div className='content-wrap' id='forecast'>
           <ForecastForm t={t} />
           <ForecastResults result={null} locale={locale} t={t} />
+          <ForecastInfo t={forecastInfoCopy[locale]} />
         </div>
       </main>
+      <Footer t={forecastInfoCopy[locale]} />
       <AuthDialog dialogRef={dialogRef} t={t} />
     </>
   );
