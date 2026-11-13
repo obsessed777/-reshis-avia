@@ -50,11 +50,11 @@ export default function DemandChart({ result, locale, t }: { result: Forecast; l
           </div>
           <div className='chart-axis'><span>{t.axisY}</span><span>{t.axisX}</span></div>
           <div className={styles.legend} aria-hidden='true'><span><i className={styles.legendLine} />{copy.demand}</span><span><i className={styles.legendCapacity} />{copy.capacity}</span><span><i className={styles.legendMedian} />{copy.median}</span></div>
-          <table className={styles.srOnly}>
+          <div className={styles.srOnly}><table>
             <caption>{copy.caption}</caption>
             <thead><tr><th>{t.axisX}</th><th>{t.axisY}</th></tr></thead>
             <tbody>{values.map(point => <tr key={point.quantile}><th scope='row'>Q{Math.round(point.quantile * 100)}</th><td>{format(point.demand)}</td></tr>)}</tbody>
-          </table>
+          </table></div>
         </figure>
       </div>
       <aside className='chart-guide'>

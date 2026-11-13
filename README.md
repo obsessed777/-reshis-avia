@@ -33,4 +33,8 @@ npm start
 
 Приложение рассчитано на Vercel и Cloudflare Workers через OpenNext. На каждом хостинге задайте `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` и `APP_ORIGIN` с origin именно этого размещения; оба могут использовать один проект Supabase. Для Vercel используется стандартная сборка `npm run build`. Для Cloudflare доступны `npm run worker:build`, `npm run worker:preview` и `npm run worker:deploy` после настройки аккаунта и окружения.
 
-На [Vercel](https://reshis-avia-taupe.vercel.app/) пока опубликована предыдущая оболочка; новая версия с расчётом и авторизацией ожидает публикации и проверки на обоих хостингах.
+Рабочие адреса: [Vercel](https://reshis-avia-taupe.vercel.app/) и [Cloudflare](https://reshis-avia.dprostoboria9090.workers.dev/). Оба используют общую базу аккаунтов; вход на каждом адресе выполняется отдельно. Выход на одном адресе сохраняет сессию другого.
+
+Проверены все 155 сочетаний маршрута и даты на обоих API, девять квантилей, крайние цены и ошибки ввода. На HTTPS проверены регистрация, вход, обновление сессии, выход и независимость сессий двух доменов. Cookie имеют HttpOnly, Secure и SameSite=Lax.
+
+Если переменные Cloudflare заданы через dashboard, последующие публикации выполняйте с сохранением настроек: `npx opennextjs-cloudflare deploy -- --keep-vars` после `npm run worker:build`. Для входа Wrangler из браузера без доступа к localhost используйте `npx wrangler login --device`; для публикации нужны разрешения Account Read, User Read и Workers Scripts Write.
