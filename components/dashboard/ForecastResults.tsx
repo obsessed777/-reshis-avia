@@ -2,6 +2,7 @@ import type { Locale, ShellCopy } from '@/lib/i18n/shell';
 import type { Forecast } from '@/lib/contracts/forecast';
 import { calculatorCopy } from '@/lib/i18n/calculator';
 import Icon from './Icon';
+import DemandChart from './DemandChart';
 
 export function ChartPlaceholder({ t }: { t: ShellCopy }) {
   return (
@@ -47,7 +48,7 @@ export default function ForecastResults({ result, locale, t }: { result: Forecas
           </article>
         ))}
       </div>
-      <ChartPlaceholder t={t} />
+      {result ? <DemandChart result={result} locale={locale} t={t} /> : <ChartPlaceholder t={t} />}
     </section>
   );
 }
