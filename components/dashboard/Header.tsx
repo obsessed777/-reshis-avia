@@ -1,7 +1,11 @@
 import type { Locale, ShellCopy } from '@/lib/i18n/shell';
+import { authCopy } from '@/lib/i18n/auth';
+import type { AuthUser } from '@/components/auth/useAuth';
+import styles from '@/components/auth/auth.module.css';
 import Icon from './Icon';
 
-export default function Header({ locale, setLocale, onLogin, t }: { locale: Locale; setLocale: (locale: Locale) => void; onLogin: () => void; t: ShellCopy }) {
+export default function Header({ locale, setLocale, onLogin, t, user, onLogout, authBusy, logoutError }: { locale: Locale; setLocale: (locale: Locale) => void; onLogin: () => void; t: ShellCopy; user?: AuthUser | null; onLogout?: () => void; authBusy?: boolean; logoutError?: boolean }) {
+  const text = authCopy[locale];
   return (
     <header className='site-header'>
       <div className='header-inner'>
@@ -13,7 +17,11 @@ export default function Header({ locale, setLocale, onLogin, t }: { locale: Loca
             <span aria-hidden='true'>/</span>
             <button type='button' aria-pressed={locale === 'en'} onClick={() => setLocale('en')}>EN</button>
           </div>
-          <button className='login' type='button' onClick={onLogin}>{t.login}</button>
+          {user ? <details className={styles.account}>
+            <summary className='login'>{text.account}</summary>
+            <div className={styles.menu}><span className={styles.email}>{user.email}</span><button type='button' disabled={authBusy} onClick={onLogout}>{authBusy ? text.loading : text.logout}</button></div>
+          </details> : <button className='login' type='button' onClick={onLogin}>{t.login}</button>}
+          {logoutError && <span role='alert' className={styles.logoutError}>{text.logoutError}</span>}
         </div>
       </div>
     </header>

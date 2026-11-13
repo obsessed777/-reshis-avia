@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -11,9 +11,11 @@ import Header from '@/components/dashboard/Header';
 import { copy, type Locale } from '@/lib/i18n/shell';
 import { forecastInfoCopy } from '@/lib/i18n/forecast-info';
 import type { Forecast, ForecastRequest } from '@/lib/contracts/forecast';
+import { useAuth } from '@/components/auth/useAuth';
 
 export default function Home() {
   const [locale, setLocale] = useState<Locale>('ru');
+  const auth = useAuth();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const activeRequest = useRef<AbortController | null>(null);
   const [result, setResult] = useState<Forecast | null>(null);
@@ -50,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-      <Header locale={locale} setLocale={setLocale} onLogin={() => dialogRef.current?.showModal()} t={t} />
+      <Header locale={locale} setLocale={setLocale} onLogin={() => dialogRef.current?.showModal()} t={t} user={auth.user} onLogout={auth.logout} authBusy={auth.busy} logoutError={auth.logoutError} />
       <main id='top'>
         <section className='hero'>
           <div className='hero-image'>
@@ -70,7 +72,7 @@ export default function Home() {
         </div>
       </main>
       <Footer t={forecastInfoCopy[locale]} />
-      <AuthDialog dialogRef={dialogRef} t={t} />
+      <AuthDialog dialogRef={dialogRef} t={t} locale={locale} onAuthenticated={auth.setUser} />
     </>
   );
 }

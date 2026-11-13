@@ -66,7 +66,12 @@ try {
   }
   const lead = await fetch(`${url}/api/lead`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
   assert.equal(lead.status, 503);
-  console.log("Smoke test passed: homepage, health, route coverage, forecast and error paths, disabled lead");
+  const me = await fetch(`${url}/api/auth/me`);
+  assert.ok([401, 503].includes(me.status), `Unexpected anonymous auth status: ${me.status}`);
+  assert.match(me.headers.get('cache-control') ?? '', /no-store/);
+  const forbidden = await fetch(`${url}/api/auth/logout`, { method: 'POST', headers: { origin: 'https://foreign.example' } });
+  assert.equal(forbidden.status, 403);
+  console.log("Smoke test passed: homepage, health, route coverage, forecast and error paths, anonymous auth and disabled lead");
 } finally {
   server.kill();
 }
