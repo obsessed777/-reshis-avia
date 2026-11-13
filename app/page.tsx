@@ -20,11 +20,13 @@ export default function Home() {
       <main id='top'>
         <section className='hero'>
           <div className='hero-image'>
-            <Image src='https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80' alt='' fill priority sizes='(max-width: 767px) 100vw, 70vw' style={{ objectFit: 'cover', objectPosition: 'center' }} />
+            <Image src='https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=2560&q=80' alt='' fill priority sizes='100vw' style={{ objectFit: 'cover', objectPosition: 'center' }} />
           </div>
           <div className='hero-content'>
+            <p className='eyebrow'>{t.eyebrow}</p>
             <h1>{t.titleLine1}<br />{t.titleLine2}</h1>
             <p className='hero-subtitle'>{t.subtitle}</p>
+            <a className='hero-cta' href='#forecast'>{t.heroCta}<span aria-hidden='true'>↗</span></a>
           </div>
         </section>
         <div className='content-wrap' id='forecast'>
