@@ -21,11 +21,14 @@ try {
   assert.equal(page.status, 200);
   const html = await page.text();
   assert.match(html, /<html[\s>]/i);
-  assert.match(html, /Демонстрационная версия. Заявки не принимаются./);
+  assert.match(html, /РЕШИСЬ/);
+  assert.match(html, /Прогноз спроса/);
+  assert.match(html, /Расчёт подключается на следующем этапе/);
+  assert.match(html, /aria-pressed=/);
   assert.match(html, /<button[^>]*type="submit"[^>]*disabled/);
   const lead = await fetch(`${url}/api/lead`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
   assert.equal(lead.status, 503);
-  console.log("Smoke test passed: homepage, health, disabled lead endpoint");
+  console.log("Smoke test passed: forecast homepage, health, disabled lead endpoint");
 } finally {
   server.kill();
 }
