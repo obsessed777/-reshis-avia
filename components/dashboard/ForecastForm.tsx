@@ -3,6 +3,8 @@ import type { ForecastRequest, RoutesResponse } from '@/lib/contracts/forecast';
 import { calculatorCopy } from '@/lib/i18n/calculator';
 import type { Locale, ShellCopy } from '@/lib/i18n/shell';
 import Icon from './Icon';
+import DestinationPicker from '@/components/inputs/DestinationPicker';
+import DatePicker from '@/components/inputs/DatePicker';
 
 export default function ForecastForm({ t, locale, pending, error, onSubmit, onEdit, initial }: { t: ShellCopy; locale: Locale; pending: boolean; error: string | null; onSubmit: (request: ForecastRequest) => void; onEdit: () => void; initial?: ForecastRequest }) {
   const [destination, setDestination] = useState(initial?.destination ?? 'AER');
@@ -28,11 +30,9 @@ export default function ForecastForm({ t, locale, pending, error, onSubmit, onEd
         <div className='field'><label htmlFor='origin'>{t.from}</label><input id='origin' value={t.moscow} readOnly /></div>
         <div className='field'>
           <label htmlFor='destination'>{t.to}</label>
-          <select id='destination' value={destination} onChange={event => { setDestination(event.target.value); onEdit(); }}>
-            {(routes?.routes.map(r => r.destination) ?? ['AER', 'KGD', 'LED', 'MRV', 'OVB']).map(code => <option key={code} value={code}>{cities[code] ?? code}</option>)}
-          </select>
+          <DestinationPicker value={destination} locale={locale} options={(routes?.routes.map(r => r.destination) ?? ['AER', 'KGD', 'LED', 'MRV', 'OVB']).map(code => ({ value: code, label: cities[code] ?? code }))} onChange={value => { if (value !== destination) { setDestination(value); onEdit(); } }} />
         </div>
-        <div className='field'><label htmlFor='date'>{t.date}</label><input id='date' type='date' value={date} onChange={event => { setDate(event.target.value); onEdit(); }} /></div>
+        <div className='field'><label htmlFor='date'>{t.date}</label><DatePicker value={date} available={current?.dates ?? []} locale={locale} onChange={value => { if (value !== date) { setDate(value); onEdit(); } }} /></div>
         <div className='field'><label htmlFor='price'>{t.price}</label><input id='price' type='number' min='0.01' step='0.01' inputMode='decimal' value={price} onChange={event => { setPrice(event.target.value); onEdit(); }} placeholder='—' /></div>
         <button className='calculate' type='submit' disabled={pending} aria-describedby='calc-status'>{pending ? c.loading : t.calculate}<Icon name='arrow' /></button>
       </form>

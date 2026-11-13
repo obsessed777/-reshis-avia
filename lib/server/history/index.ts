@@ -19,7 +19,10 @@ export async function historySession(request: NextRequest) {
 export function historyItem(row: { id: string; created_at: string; snapshot: unknown }): HistoryItem {
   const value = row.snapshot as Forecast | null;
   const numbers = value ? [value.price, value.seats, value.demand, value.sales, value.freeSeats] : [];
-  if (!value || typeof value.route !== 'string' || typeof value.date !== 'string' || typeof value.dataVersion !== 'string'
+  if (!value || typeof value.route !== 'string' || !/^MOW-(AER|KGD|LED|MRV|OVB)$/.test(value.route)
+    || typeof value.date !== 'string' || !/^2026-(06-\d{2}|07-01)$/.test(value.date)
+    || !Number.isFinite(Date.parse(`${value.date}T00:00:00Z`)) || new Date(`${value.date}T00:00:00Z`).toISOString().slice(0, 10) !== value.date
+    || value.date < '2026-06-01' || value.date > '2026-07-01' || typeof value.dataVersion !== 'string'
     || numbers.length !== 5 || numbers.some(n => typeof n !== 'number' || !Number.isFinite(n))
     || !Array.isArray(value.quantiles) || value.quantiles.length !== 9
     || value.quantiles.some((p, i) => !p || p.quantile !== (i + 1) / 10 || !Number.isFinite(p.demand))

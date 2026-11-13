@@ -3,6 +3,7 @@ import type { Forecast } from '@/lib/contracts/forecast';
 import { calculatorCopy } from '@/lib/i18n/calculator';
 import Icon from './Icon';
 import DemandChart from './DemandChart';
+import AnimatedNumber from './AnimatedNumber';
 
 export function ChartPlaceholder({ t }: { t: ShellCopy }) {
   return (
@@ -42,7 +43,7 @@ export default function ForecastResults({ result, locale, t }: { result: Forecas
             <div>
               <h3>{card.label}</h3>
               <p className={card.value === undefined ? 'metric-placeholder' : 'metric-value'}>
-                {card.value === undefined ? t.noResult : new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(card.value)}
+                {card.value === undefined ? t.noResult : <AnimatedNumber value={card.value} locale={locale} trigger={result} />}
               </p>
             </div>
           </article>
